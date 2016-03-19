@@ -1,0 +1,67 @@
+<!doctype html>
+<title>Oval &ndash; disassembler for Ovum modules</title>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700|Inconsolata:400">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/oval.css">
+
+<section class="main">
+	<section class="loading-screen">
+		<div class="loading">
+			<p>Loading&hellip;</p>
+			<div class="throbber"></div>
+			<p class="loading-hint">
+				<span class="loading-hint__slow">Taking a while &ndash; hang in there!</span>
+				<span class="loading-hint__maybe-stuck">Taking quite a while &ndash; might be stuck.<br>Try reloading?</span>
+			</p>
+		</div>
+	</section>
+
+	<section class="start-screen">
+		<button class="file-zone">
+			<div class="file-zone__hint">
+				<p class="file-zone__hint__main">Drop a module file here<br>or click to browse</p>
+				<p class="file-zone__hint__file-type">(And make sure it&rsquo;s an .ovm file)</p>
+			</div>
+			<div class="file-zone__drop">
+				<i class="file-zone__drop__arrow fa fa-fw fa-4x fa-arrow-down"></i>
+				<i class="file-zone__drop__target fa fa-fw fa-4x fa-folder-open-o"></i>
+			</div>
+		</button>
+	</section>
+
+	<!-- The module screen shows all the module's members and associated data -->
+	<section class="module-screen">
+		<section class="sidebar">
+			<button class="open-zone">
+				<span class="open-zone__text">Open another module</span>
+				<span class="open-zone__hint">(click or drop)</span>
+			</button>
+
+			<label class="member-search">
+				<input type="search" placeholder="Filter members">
+				<div><i class="fa fa-search"></i></div>
+			</label>
+
+			<div class="member-list">
+				<ul></ul>
+			</div>
+		</section>
+
+		<section class="member-details">
+			<div class="member-heading">
+				<p class="member-current">
+					 <span class="member-name"></span>
+				</p>
+				<p class="member-parent">
+					<i class="fa fa-fw fa-flip-horizontal fa-level-up"></i>
+					<span class="member-name"></span>
+				</p>
+			</div>
+
+			<div class="member-contents"></div>
+		</section>
+	</section>
+</section>
+
+<script src="js/loading.js"></script>
+<script src="js/app.js"></script>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     version="1.1"
+     width="26" height="26">
+	<defs>
+		<g id="icon-module">
+			<circle cx="13" cy="13" r="11"
+			        fill="none"
+			        stroke="currentColor" stroke-width="1.5"/>
+			<rect x="5" y="10" width="5" height="5"
+			      fill="currentColor"/>
+			<circle cx="15.5" cy="17.5" r="2.5"
+			        fill="currentColor"/>
+			<polygon points="13,11 19,11 19,10 16.5,6 15.5,6 13,10"
+			         fill="currentColor"/>
+		</g>
+
+		<g id="icon-namespace">
+			<!-- Pair of curly braces - "{}" -->
+			<path d="M11,2 C7.5,2 5,3 5,7.5 C5,11.5 3.5,12 2,12.5 L2,13.5 C3.5,14 5,14.5 5,18.5 C5,23 7.5,24 11,24 L11,23 C9,22.5 8,22 8,18.5 C8,15.5 7,14 5,13.5 L5,12.5 C7,12 8,10.5 8,7.5 C8,4 9,3.5 11,3 Z
+			         M15,3 C17,3.5 18,4 18,7.5 C18,10.5 19,12 21,12.5 L21,13.5 C19,14 18,15.5 18,18.5 C18,22 17,22.5 15,23 L15,24 C18.5,24 21,23 21,18.5 C21,14.5 22.5,14 24,13.5 L24,12.5 C22.5,12 21,11.5 21,7.5 C21,3 18.5,2 15,2 Z"
+			      fill="currentColor"/>
+		</g>
+
+		<g id="icon-type">
+			<rect x="7" y="3" width="9" height="9" rx="2" ry="2"
+			      fill="currentColor"/>
+			<rect x="3" y="14" width="9" height="9" rx="2" ry="2"
+			      fill="currentColor"/>
+			<rect x="14" y="14" width="9" height="9" rx="2" ry="2"
+			      fill="currentColor"/>
+		</g>
+
+		<g id="icon-type-abstract">
+			<rect x="8" y="4" width="7" height="7" rx="2" ry="2"
+			      fill="none"
+			      stroke="currentColor" stroke-width="2"/>
+			<rect x="4" y="15" width="7" height="7" rx="2" ry="2"
+			      fill="none"
+			      stroke="currentColor" stroke-width="2"/>
+			<rect x="15" y="15" width="7" height="7" rx="2" ry="2"
+			      fill="none"
+			      stroke="currentColor" stroke-width="2"/>
+		</g>
+
+		<g id="icon-method">
+			<polygon points="12.5,5 13.5,5 20,12.5 20,13.5 13.5,21 12.5,21 6,13.5 6,12.5"
+			         fill="currentColor"/>
+		</g>
+
+		<g id="icon-method-abstract">
+			<polygon points="12.5,6 13.5,6 19,12.5 19,13.5 13.5,20 12.5,20 7,13.5 7,12.5"
+			         fill="none"
+			         stroke="currentColor" stroke-width="2"/>
+		</g>
+
+		<g id="icon-field">
+			<polygon points="12.5,20 13.5,20 20,7 20,6 6,6 6,7"
+			         fill="currentColor"/>
+		</g>
+
+		<g id="icon-property">
+			<circle cx="13" cy="13" r="7"
+			        fill="currentColor"/>
+		</g>
+
+		<g id="icon-property-abstract">
+			<circle cx="13" cy="13" r="6"
+			        fill="none"
+			        stroke="currentColor" stroke-width="2"/>
+		</g>
+
+		<g id="icon-operator">
+			<polygon points="4,9 7,9 7,12 9,12 9,9 12,9 12,7 9,7 9,4 7,4 7,7 4,7"
+			         fill="currentColor"/>
+			<polygon points="4,19 12,19 12,17 4,17"
+			         fill="currentColor"/>
+			<polygon points="14,12 16.5,12 22,4 19.5,4"
+			         fill="currentColor"/>
+			<polygon points="14,18 16.5,18.9 14,22 16.5,22 18,20.1 19.5,22 22,22 19.5,18.9 22,18 22,16 19,16.9 19,14 17,14 17,16.9 14,16"
+			         fill="currentColor"/>
+		</g>
+
+		<g id="icon-base-type">
+			<!-- 0———O -->
+			<circle cx="5" cy="13" r="4"
+			        fill="currentColor"/>
+			<line x1="5" y1="13"
+			      x2="17" y2="13"
+			      stroke="currentColor" stroke-width="2"/>
+			<circle cx="21" cy="13" r="3"
+			        fill="none"
+			        stroke="currentColor" stroke-width="2"/>
+		</g>
+
+		<g id="icon-shared-type">
+			<!-- O···0 -->
+			<circle cx="5" cy="13" r="3"
+			        fill="none"
+			        stroke="currentColor" stroke-width="2"/>
+			<line x1="9" y1="13"
+			      x2="21" y2="13"
+			      stroke="currentColor" stroke-width="2" stroke-dasharray="2,1"/>
+			<circle cx="21" cy="13" r="4"
+			        fill="currentColor"/>
+		</g>
+
+		<g id="icon-derived-types">
+			<!-- Like O———0, but with two derived types -->
+			<circle cx="5" cy="13" r="3"
+			        fill="none"
+			        stroke="currentColor" stroke-width="2"/>
+			<line x1="7" y1="12"
+			      x2="21" y2="7"
+			      stroke="currentColor" stroke-width="2"/>
+			<circle cx="21" cy="7" r="4"
+			        fill="currentColor"/>
+			<line x1="7" y1="14"
+			      x2="21" y2="19"
+			      stroke="currentColor" stroke-width="2"/>
+			<circle cx="21" cy="19" r="4"
+			        fill="currentColor"/>
+		</g>
+
+		<!-- Various little badges -->
+		<!--
+			SVG won't let us stroke the outside of a shape, and there's no way to put the stroke
+			underneath the fill. So we have to draw each shape twice, once for the stroke, once
+			for the fill.
+		-->
+		<!-- Arrow -->
+		<polygon id="shape-ref"
+		         points="17.5,3 20,3 23.5,6.5 23.5,7.5 20,11 17.5,11 20.5,8 15,8 15,6 20.5,6"/>
+		<!-- Heart -->
+		<path id="shape-protected"
+		      d="M12.2,15.4 C11.1,14.3 9.4,14.3 8.3,15.4 L7.5,16.2 6.7,15.4 C5.6,14.3 3.9,14.3 2.8,15.4 C1.7,16.5 1.7,18.2 2.8,19.3 L7.5,24 12.2,19.3 C13.3,18.2 13.3,16.5 12.2,15.4 Z"/>
+		<!-- Star -->
+		<polygon id="shape-internal"
+		         points="1.1,16.5 4.3,19.7 3.5,24.1 7.5,22.1 11.5,24.1 10.7,19.7 13.9,16.5 9.5,15.9 7.5,11.9 5.5,15.9"/>
+
+		<g id="badge-ref">
+			<use xlink:href="#shape-ref" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="bevel"/>
+			<use xlink:href="#shape-ref" fill="currentColor"/>
+		</g>
+
+		<g id="badge-private">
+			<!-- Padlock without hole -->
+			<path id="shape-private"
+			      d="M11,17 C11,14.5 9,12.5 6.5,12.5 C4,12.5 2,14.5 2,17 L2,24 11,24 Z"
+			      fill="#fff"
+			      stroke="#fff" stroke-width="2" stroke-linejoin="bevel"/>
+			<!-- Padlock with hole -->
+			<path id="shape-private"
+			      d="M11,17 C11,14.5 9,12.5 6.5,12.5 C4,12.5 2,14.5 2,17 L2,24 11,24 Z
+			         M4,18 L4,17 C4,15.6 5.1,14.5 6.5,14.5 C7.9,14.5 9,15.6 9,17 L9,18 Z"
+			      fill="currentColor"/>
+		</g>
+
+		<g id="badge-protected">
+			<use xlink:href="#shape-protected" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="bevel"/>
+			<use xlink:href="#shape-protected" fill="currentColor"/>
+		</g>
+
+		<g id="badge-internal">
+			<use xlink:href="#shape-internal" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="bevel"/>
+			<use xlink:href="#shape-internal" fill="currentColor"/>
+		</g>
+	</defs>
+</svg>
