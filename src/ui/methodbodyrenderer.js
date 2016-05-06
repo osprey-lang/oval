@@ -293,21 +293,7 @@ export class MethodBodyRenderer {
 	renderMemberArgument(argument) {
 		const member = argument.member;
 
-		var memberName;
-		switch (member.kind) {
-			case MemberKind.FIELD:
-			case MemberKind.METHOD:
-			case MemberKind.METHOD_REF:
-				// Show fields and methods as "fully.qualified.TypeName/field"
-				memberName = `${member.parent.fullName}/${member.name}`;
-				break;
-			default:
-				// Everything else as just the full name.
-				memberName = member.fullName;
-				break;
-		}
-
-		return Create.span(MEMBER_ARG_ATTR, this.renderLink(member, memberName));
+		return Create.span(MEMBER_ARG_ATTR, this.renderLink(member, member.fullName));
 	}
 
 	renderNumericArgument(argument) {

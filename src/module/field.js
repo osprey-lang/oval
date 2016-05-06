@@ -22,7 +22,10 @@ export class Field extends ModuleMember {
 	}
 
 	get fullName() {
-		return this._name;
+		if (!this._fullName) {
+			this._fullName = this.parent.fullName + '.' + this._name;
+		}
+		return this._fullName;
 	}
 
 	get isPublic() {

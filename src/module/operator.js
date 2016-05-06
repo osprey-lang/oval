@@ -76,7 +76,10 @@ export class Operator extends ModuleMember {
 	}
 
 	get fullName() {
-		return this.name;
+		if (!this._fullName) {
+			this._fullName = this.parent.fullName + '.operator' + this.name;
+		}
+		return this._fullName;
 	}
 
 	get operatorName() {

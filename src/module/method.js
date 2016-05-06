@@ -43,7 +43,6 @@ export class Method extends ModuleMember {
 			this._fullName = name;
 		}
 		else {
-			this._fullName = name;
 			this._name = name;
 		}
 
@@ -58,6 +57,9 @@ export class Method extends ModuleMember {
 	}
 
 	get fullName() {
+		if (!this._fullName) {
+			this._fullName = this.parent.fullName + '.' + this._name;
+		}
 		return this._fullName;
 	}
 
