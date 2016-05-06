@@ -1,11 +1,18 @@
 import {SidebarRenderer} from './sidebarrenderer';
+import {SearchResultRenderer} from './searchresultrenderer';
 import {DetailsRenderer} from './detailsrenderer';
 import {MemberFilter} from './memberfilter';
 import {FileDropZone} from '../filedropzone';
+import {Create} from '../html/create';
 import EventEmitter from '../lib/eventemitter2';
 
 const CURRENT_MEMBER_CLASS = 'member--current';
-const FILTERED_LIST_CLASS = 'member-list--filtered';
+const FILTERED_LIST_CLASS = 'sidebar--filtered';
+const HAS_MORE_RESULTS_CLASS = 'member-list__search-results--has-more';
+
+// Maximum number of search results per "page". Limited not because searching
+// is slow, but because re-rendering the results takes a fair amount of time.
+const RESULTS_PER_PAGE = 20;
 
 export class ModulePage {
 	constructor(elem) {
@@ -69,7 +76,7 @@ export class ModulePage {
 	}
 
 	initMemberList() {
-		const memberList = this.elem.querySelector('.member-list ul');
+		const memberList = this.elem.querySelector('.member-list__hierarchy');
 
 		const renderer = new SidebarRenderer({
 			raise: (event, arg) => {
@@ -108,24 +115,70 @@ export class ModulePage {
 	}
 
 	initMemberFilter() {
-		const memberList = this.elem.querySelector('.member-list');
+		const sidebar = this.elem.querySelector('.sidebar');
+		const searchResultList = this.elem.querySelector('.member-list__search-results');
 		const filterInput = this.elem.querySelector('.member-search input');
+		const showMoreItem = this.elem.querySelector('.member-list__search-results__more');
+		const showMoreButton = showMoreItem.querySelector('button');
+
+		const renderer = new SearchResultRenderer({
+			raise: (event, arg) => {
+				this.events.emit(event, arg);
+			},
+		});
 
 		const searcher = new MemberFilter({
 			getElement: member => this._memberToElement.get(member),
 		});
 
+		var currentResults = null;
+		var currentOffset = 0;
+
+		const appendMoreResults = () => {
+			const fragment = Create.fragment();
+
+			const end = Math.min(currentOffset + RESULTS_PER_PAGE, currentResults.length);
+			for (var i = currentOffset; i < end; i++) {
+				fragment.appendChild(renderer.render(currentResults[i]));
+			}
+
+			searchResultList.insertBefore(fragment, showMoreItem);
+			currentOffset += RESULTS_PER_PAGE;
+
+			if (currentOffset < currentResults.length) {
+				searchResultList.classList.add(HAS_MORE_RESULTS_CLASS);
+			}
+			else {
+				searchResultList.classList.remove(HAS_MORE_RESULTS_CLASS);
+			}
+		};
+
+		const setResults = (results) => {
+			searchResultList.innerHTML = '';
+
+			currentResults = results;
+			currentOffset = 0;
+			if (results) {
+				searchResultList.appendChild(showMoreItem);
+				appendMoreResults();
+			}
+		};
+
 		filterInput.addEventListener('input', e => {
 			const query = filterInput.value.trim();
 
 			if (query.length > 0) {
-				memberList.classList.add(FILTERED_LIST_CLASS);
-				searcher.filter(this.currentModule, query);
+				sidebar.classList.add(FILTERED_LIST_CLASS);
+				const results = searcher.filter(this.currentModule, query);
+				setResults(results);
 			}
 			else {
-				memberList.classList.remove(FILTERED_LIST_CLASS);
+				sidebar.classList.remove(FILTERED_LIST_CLASS);
+				setResults(null);
 			}
 		}, false);
+
+		showMoreButton.addEventListener('click', appendMoreResults, false);
 	}
 
 	initDetailView() {

@@ -316,13 +316,22 @@ input[type=file] {
 		display: flex;
 		margin: 50px;
 		flex: 0 0 400px;
-		width: 400px;
 		max-width: 400px;
 
 		flex-direction: column;
 
 		white-space: nowrap;
+
+		transition: flex-basis, max-width;
+		transition-duration: 150ms;
+		transition-timing-function: ease-in-out;
+		transition-delay: 0.5s;
 	}
+		.sidebar--filtered {
+			flex-basis: 600px;
+			max-width: 600px;
+			transition-delay: 0s;
+		}
 
 		.open-zone,
 		.open-zone:hover,
@@ -406,22 +415,29 @@ input[type=file] {
 				min-width: 100%;
 			}
 
+				.sidebar > .member-list .member-list__search-results,
+				.sidebar--filtered > .member-list .member-list__hierarchy {
+					display: none;
+				}
+
+				.sidebar--filtered > .member-list .member-list__search-results {
+					display: inline-block;
+				}
+
 			.sidebar .member {
-				margin-left: 24px;
 				vertical-align: middle;
 			}
+
+				.sidebar .member-list__hierarchy .member {
+					margin-left: 24px;
+				}
 
 				.sidebar .member > ul {
 					display: none;
 				}
-					.sidebar .member--expanded > ul,
-					.sidebar .member-list--filtered > ul ul {
+					.sidebar .member--expanded > ul {
 						display: block;
 					}
-
-				.member-list--filtered :not(.member--match-search) > .member-name {
-					display: none;
-				}
 
 		.sidebar .member-link {
 			line-height: 27px;
@@ -440,6 +456,35 @@ input[type=file] {
 
 				background: #fff;
 			}
+
+		.member-list__search-results__more {
+			display: none;
+			padding: 5px 0;
+		}
+
+			.member-list__search-results--has-more .member-list__search-results__more {
+				display: block;
+			}
+
+			.member-list__search-results__more button {
+				display: flex;
+				padding-top: 5px;
+				padding-bottom: 8px;
+
+				flex-direction: column;
+				align-items: center;
+
+				width: 100%;
+				max-width: 500px;
+
+				background: #d6c7c2;
+				border: none;
+				cursor: pointer;
+			}
+
+				.member-list__search-results__more .fa {
+					line-height: 10px;
+				}
 
 .member-list {
 	position: relative;
@@ -496,10 +541,6 @@ input[type=file] {
 				content: '\f0d7';
 				content: '\f107';
 			}
-
-		.member-list--filtered .member__expander::before {
-			display: none;
-		}
 
 .member-details {
 	display: flex;

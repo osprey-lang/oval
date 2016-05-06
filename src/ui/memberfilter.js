@@ -1,4 +1,5 @@
 import {ModuleMemberVisitor, MemberKind, MetaKind} from '../module/modulemember';
+import {FilterWeights} from './filterweights';
 
 const REGEX_META_CHARS = /[-\/\\^$*+?.()|[\]{}]/g;
 
@@ -70,8 +71,34 @@ export class SearchQuery {
 		this.simpleMatch = components.length === 1 ? components[0] : null;
 	}
 
+	scoreMatch(regex, name) {
+		const m = regex.exec(name);
+		if (!m) {
+			return 0;
+		}
+
+		// Full matches confer a large score.
+		const matchLength = m[0].length;
+		if (matchLength === name.length) {
+			return FilterWeights.NAME_FULL;
+		}
+
+		// Matches at the very beginning a somewhat smaller but still respectable score.
+		if (m.index === 0) {
+			return FilterWeights.NAME_START;
+		}
+
+		// Other matches are scored based on their position in the word: the further down
+		// the name, the smaller the score.
+		const progress = 1 - m.index / (name.length - matchLength);
+		return FilterWeights.NAME_PARTIAL_BASE + FilterWeights.NAME_PARTIAL * progress;
+	}
+
 	matchesSimple(name) {
-		return this.simpleMatch && this.simpleMatch.test(name);
+		if (!this.simpleMatch) {
+			return 0;
+		}
+		return this.scoreMatch(this.simpleMatch, name);
 	}
 
 	matchesFull(member) {
@@ -81,7 +108,10 @@ export class SearchQuery {
 
 		const declaringModule = member.declaringModule;
 
+		var totalScore = 0;
 		var index = 0;
+		var lastMatch = 0;
+		var distanceFromStart = 0; // Number of ancestor steps from initial member
 		var component = this.components[0];
 
 		while (
@@ -89,8 +119,13 @@ export class SearchQuery {
 			// Stop at the module boundary (we don't want to match against the module's name)
 			member !== declaringModule
 		) {
-			if (component.test(member.name)) {
-				// The member matched the current component. Keep walking "up" the dotted chain.
+			var score = this.scoreMatch(component, member.name);
+			if (score > 0) {
+				// The member matched the current component, let's calculate its final score.
+				totalScore += score * FilterWeights.getAncestorFactor(distanceFromStart, distanceFromStart - lastMatch);
+				lastMatch = distanceFromStart;
+
+				// Keep walking "up" the dotted chain.
 				index++;
 				component = this.components[index];
 			}
@@ -101,10 +136,11 @@ export class SearchQuery {
 
 			// Always walk up the member chain.
 			member = member.parent;
+			distanceFromStart++;
 		}
 
 		// If index === maxIndex, it means the whole chain matches, so the member matches.
-		return index === this.maxIndex;
+		return index === this.maxIndex ? totalScore : 0;
 	}
 
 	static from(query) {
@@ -126,164 +162,158 @@ export class MemberFilter extends ModuleMemberVisitor {
 
 	filter(member, query) {
 		query = SearchQuery.from(query);
-		return member.accept(this, query);
+		this.results = [];
+		member.accept(this, query);
+
+		return this.results
+			// Sort by score (highest first), then by name.
+			.sort((a, b) => {
+				if (a.score !== b.score) {
+					return b.score - a.score;
+				}
+				a = a.member;
+				b = b.member;
+
+				// Generally we want global members first; the MemberKind values
+				// are deliberately ordered that way.
+				if (a.kind !== b.kind) {
+					return a.kind - b.kind;
+				}
+
+				if (a.fullName < b.fullName) {
+					return -1;
+				}
+				if (a.fullName > b.fullName) {
+					return 1;
+				}
+				return 0;
+			})
+			// We only want to expose the member at the moment
+			.map(r => r.member);
 	}
 
 	matchChildren(children, query) {
-		var anyMatches = false;
-
-		children.forEach(child => {
-			const matches = child.accept(this, query);
-
-			if (matches) {
-				anyMatches = true;
-			}
-		});
-
-		return anyMatches;
+		children.forEach(child => child.accept(this, query));
 	}
 
-	setMemberMatches(member, matches) {
-		const element = this.getElement(member);
-
-		// If we don't find an element, there are two possibilities:
-		//   1. The member may genuinely not have a corresponding element (e.g. if
-		//      it's a method group);
-		//   2. The member is a namespace with only one namespace child, in which
-		//      case that child has the element (unless it, too, has only one child
-		//      that happens to be a namespace... recurse).
-		// In case 1, there's nothing to do, so just ignore it. In case 2, the child
-		// will eventually be searched, and we probably don't want to show it as a
-		// match unless the child itself actually matches.
-
-		if (element) {
-			if (matches) {
-				element.classList.add('member--match-search');
-			}
-			else {
-				element.classList.remove('member--match-search');
-			}
-		}
+	addResult(member, score) {
+		this.results.push({
+			member: member,
+			score: score,
+		});
 	}
 
 	visitModule(module, query) {
 		// Modules themselves never match any search query, but their members do.
-
-		const anyModuleRefMatches = module.moduleRefs.accept(this, query);
-
-		const anyMemberMatches = module.members.accept(this, query);
-
-		return anyModuleRefMatches || anyMemberMatches;
+		module.moduleRefs.accept(this, query);
+		module.members.accept(this, query);
 	}
 
 	visitMetadata(meta, query) {
 		if (meta.metaKind === MetaKind.REFERENCES) {
-			return this.matchModuleReferences(meta, query);
+			this.matchModuleReferences(meta, query);
 		}
-
-		return false;
 	}
 
 	matchModuleReferences(modules, query) {
-		const anyChildMatches = this.matchChildren(modules, query);
-		this.setMemberMatches(modules, anyChildMatches);
-		return anyChildMatches;
+		this.matchChildren(modules, query);
 	}
 
 	visitModuleRef(module, query) {
-		const selfMatches = query.matchesSimple(module);
-		const anyChildMatches = module.members.accept(this, query);
-
-		this.setMemberMatches(module, selfMatches || anyChildMatches);
-		return selfMatches || anyChildMatches;
+		const score = query.matchesSimple(module.name);
+		if (score > 0) {
+			this.addResult(module, score);
+		}
+		module.members.accept(this, query);
 	}
 
 	visitTypeRef(type, query) {
-		const selfMatches = query.matchesFull(type);
-		const anyChildMatches = this.matchChildren(type, query);
-
-		this.setMemberMatches(type, selfMatches || anyChildMatches);
-		return selfMatches || anyChildMatches;
+		const score = query.matchesFull(type);
+		if (score > 0) {
+			this.addResult(type, score);
+		}
+		this.matchChildren(type, query);
 	}
 
 	visitMethodRef(method, query) {
-		const selfMatches = query.matchesFull(method);
-		this.setMemberMatches(method, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(method);
+		if (score > 0) {
+			this.addResult(method, score);
+		}
 	}
 
 	visitFieldRef(field, query) {
-		const selfMatches = query.matchesFull(field);
-		this.setMemberMatches(field, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(field);
+		if (score > 0) {
+			this.addResult(field, score);
+		}
 	}
 
 	visitFunctionRef(func, query) {
-		const selfMatches = query.matchesFull(func);
-		this.setMemberMatches(func, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(func);
+		if (score > 0) {
+			this.addResult(func, score);
+		}
 	}
 
 	visitNamespace(namespace, query) {
-		const selfMatches = query.matchesFull(namespace);
-
-		// If the namespace has been collapsed with its children, i.e. if a structure like this:
-		//   {} one
-		//     {} two
-		//       {} three
-		// has been collapsed into
-		//   {} one.two.three
-		// then if 'one' or 'two' matches, the whole thing should be visible.
-		//const collapsedMatch = selfMatches && namespace.canCollapse;
-		const anyChildMatches = this.matchChildren(namespace, query);
-
-		this.setMemberMatches(namespace, selfMatches || anyChildMatches);
-		return selfMatches || anyChildMatches;
+		if (!namespace.isGlobal) {
+			const score = query.matchesFull(namespace);
+			if (score > 0) {
+				this.addResult(namespace, score);
+			}
+		}
+		this.matchChildren(namespace, query);
 	}
 
 	visitType(type, query) {
-		const selfMatches = query.matchesFull(type);
-		const anyChildMatches = this.matchChildren(type, query);
-
-		this.setMemberMatches(type, selfMatches || anyChildMatches);
-		return selfMatches || anyChildMatches;
+		const score = query.matchesFull(type);
+		if (score > 0) {
+			this.addResult(type, score);
+		}
+		this.matchChildren(type, query);
 	}
 
 	visitConstant(constant, query) {
-		const selfMatches = query.matchesFull(constant);
-		this.setMemberMatches(constant, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(constant);
+		if (score > 0) {
+			this.addResult(constant, score);
+		}
 	}
 
 	visitFunction(func, query) {
-		return this.matchChildren(func, query);
+		this.matchChildren(func, query);
 	}
 
 	visitField(field, query) {
-		const selfMatches = query.matchesFull(field);
-		this.setMemberMatches(field, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(field);
+		if (score > 0) {
+			this.addResult(field, score);
+		}
 	}
 
 	visitMethod(method, query) {
-		return this.matchChildren(method, query);
+		this.matchChildren(method, query);
 	}
 
 	visitOverload(overload, query) {
-		const selfMatches = query.matchesFull(overload);
-		this.setMemberMatches(overload, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(overload);
+		if (score > 0) {
+			this.addResult(overload, score);
+		}
 	}
 
 	visitProperty(property, query) {
-		const selfMatches = query.matchesFull(property);
-		this.setMemberMatches(property, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(property);
+		if (score > 0) {
+			this.addResult(property, score);
+		}
 	}
 
 	visitOperator(operator, query) {
-		const selfMatches = query.matchesFull(operator);
-		this.setMemberMatches(operator, selfMatches);
-		return selfMatches;
+		const score = query.matchesFull(operator);
+		if (score > 0) {
+			this.addResult(operator, score);
+		}
 	}
 }
