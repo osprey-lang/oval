@@ -503,13 +503,13 @@ input[type=file] {
 	/* Nothing here yet */
 }
 
-	.member--type > ul > .member {
+	.member-list__hierarchy .member--type > ul > .member {
 		margin-left: 12px;
 		padding-left: 10px;
 		border-left: 2px solid #a87b6c;
 	}
 
-		.member--type > ul > .member--current {
+		.member-list__hierarchy .member--type > ul > .member--current {
 			border-left-color: #5a8dbf;
 		}
 
