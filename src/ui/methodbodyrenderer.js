@@ -39,6 +39,7 @@ const STRING_VALUE_ATTR = {class: 'constant-string'};
 const LINK_ATTR = {class: 'member-link'};
 
 const HIGHLIGHT_CLASS = 'code-item--highlight';
+const HIGHLIGHT_SOLO_CLASS = 'code-item--highlight-solo';
 
 const UNCHANGED_STACK_ITEM_ATTR = {class: 'stack-item stack-item--unchanged'};
 const ADDED_STACK_ITEM_ATTR = {class: 'stack-item stack-item--added'};
@@ -394,8 +395,12 @@ class CodeItem {
 		this.highlights++;
 
 		if (this.highlights === 1) {
+			const highlightClass = this.elems.length === 1
+				? HIGHLIGHT_SOLO_CLASS
+				: HIGHLIGHT_CLASS;
+
 			this.elems.forEach(elem => {
-				elem.classList.add(HIGHLIGHT_CLASS);
+				elem.classList.add(highlightClass);
 			});
 		}
 	}
@@ -406,6 +411,7 @@ class CodeItem {
 		if (this.highlights === 0) {
 			this.elems.forEach(elem => {
 				elem.classList.remove(HIGHLIGHT_CLASS);
+				elem.classList.remove(HIGHLIGHT_SOLO_CLASS);
 			});
 		}
 	}

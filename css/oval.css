@@ -791,6 +791,10 @@ input[type=file] {
 				color: #fff;
 			}
 
+			.code-item--offset.code-item--highlight-solo {
+				outline: 2px solid #84888c;
+			}
+
 		/* Only occurs in the method header, in the parameter list */
 		.code-item--param {
 			padding-top: 0;
@@ -805,6 +809,11 @@ input[type=file] {
 			.code-item--local.code-item--highlight {
 				background: #009955;
 				color: #fff;
+			}
+
+			.code-item--param.code-item--highlight-solo,
+			.code-item--local.code-item--highlight-solo {
+				outline: 2px solid #009955;
 			}
 
 		.instr__arg.member-link {
