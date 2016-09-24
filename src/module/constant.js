@@ -1,8 +1,8 @@
 import {ModuleMember, MemberKind} from './modulemember';
 
 export const ConstantFlags = Object.freeze({
-	PUBLIC:  0x01,
-	PRIVATE: 0x02,
+	PUBLIC:   0x01,
+	INTERNAL: 0x02,
 });
 
 export class Constant extends ModuleMember {
@@ -29,8 +29,8 @@ export class Constant extends ModuleMember {
 		return (this.flags & ConstantFlags.PUBLIC) === ConstantFlags.PUBLIC;
 	}
 
-	get isPrivate() {
-		return (this.flags & ConstantFlags.PRIVATE) === ConstantFlags.PRIVATE;
+	get isInternal() {
+		return (this.flags & ConstantFlags.INTERNAL) === ConstantFlags.INTERNAL;
 	}
 
 	accept(visitor, arg) {

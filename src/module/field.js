@@ -1,11 +1,13 @@
 import {ModuleMember, MemberKind} from './modulemember';
 
 export const FieldFlags = Object.freeze({
-	PUBLIC:    0x01,
-	PRIVATE:   0x02,
-	PROTECTED: 0x04,
-	INSTANCE:  0x08,
-	HAS_VALUE: 0x10,
+	PUBLIC:    0x0001,
+	INTERNAL:  0x0002,
+	PROTECTED: 0x0004,
+	PRIVATE:   0x0008,
+	INSTANCE:  0x0100,
+	HAS_VALUE: 0x0200,
+	IMPL:      0x1000,
 });
 
 export class Field extends ModuleMember {
@@ -32,12 +34,16 @@ export class Field extends ModuleMember {
 		return (this.flags & FieldFlags.PUBLIC) === FieldFlags.PUBLIC;
 	}
 
-	get isPrivate() {
-		return (this.flags & FieldFlags.PRIVATE) === FieldFlags.PRIVATE;
+	get isInternal() {
+		return (this.flags & FieldFlags.INTERNAL) === FieldFlags.INTERNAL;
 	}
 
 	get isProtected() {
 		return (this.flags & FieldFlags.PROTECTED) === FieldFlags.PROTECTED;
+	}
+
+	get isPrivate() {
+		return (this.flags & FieldFlags.PRIVATE) === FieldFlags.PRIVATE;
 	}
 
 	get isStatic() {
@@ -46,6 +52,10 @@ export class Field extends ModuleMember {
 
 	get hasValue() {
 		return (this.flags & FieldFlags.HAS_VALUE) === FieldFlags.HAS_VALUE;
+	}
+
+	get isImpl() {
+		return (this.flags & FieldFlags.IMPL) === FieldFlags.IMPL;
 	}
 
 	get value() {
