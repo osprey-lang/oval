@@ -53,6 +53,9 @@ export class SummaryRenderer extends ModuleMemberVisitor {
 		if (member.isPublic) {
 			modifiers += 'public ';
 		}
+		else if (member.isInternal) {
+			modifiers += 'internal ';
+		}
 		else if (member.isProtected) {
 			modifiers += 'protected ';
 		}
