@@ -1,5 +1,6 @@
 import {Create} from '../html/create';
 import {ModuleMemberVisitor} from '../module/modulemember';
+import {formatRequiredVersion} from './formatrequiredversion';
 
 export const MemberListRenderOptions = Object.freeze({
 	FULL_NAME: 1,
@@ -51,7 +52,7 @@ export class MemberListRenderer extends ModuleMemberVisitor {
 		return this.wrapItem([
 			this.summaryRenderer.visitModuleRef(module, this.options),
 			' \u2013 ',
-			Create.i(null, 'v' + module.version)
+			Create.i(null, formatRequiredVersion(module.version, module.versionConstraint))
 		]);
 	}
 
