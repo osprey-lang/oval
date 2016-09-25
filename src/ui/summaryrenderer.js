@@ -77,6 +77,9 @@ export class SummaryRenderer extends ModuleMemberVisitor {
 		if (member.isSealed) {
 			modifiers += 'sealed ';
 		}
+		if (member.isOverride) {
+			modifiers += 'override ';
+		}
 		if (member.isPrimitive) {
 			modifiers += 'primitive ';
 		}
