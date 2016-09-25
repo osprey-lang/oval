@@ -302,7 +302,7 @@ export class MethodBodyRenderer {
 
 	renderNumericArgument(argument) {
 		const formattedValue = argument.isRawBytes
-			? formatInt(argument.value)
+			? formatInt(argument.value, argument.signed)
 			: formatReal(argument.value);
 
 		return Create.span(NUMERIC_ARG_ATTR, formattedValue);
