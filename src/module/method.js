@@ -27,12 +27,14 @@ export const ParamFlags = Object.freeze({
 export const TryKind = Object.freeze({
 	CATCH:   0x01,
 	FINALLY: 0x02,
+	FAULT:   0x03,
 });
 
 export const BlockKind = Object.freeze({
 	TRY: 0,
 	CATCH: 1,
 	FINALLY: 2,
+	FAULT: 3,
 });
 
 export class Method extends ModuleMember {
@@ -131,9 +133,8 @@ export class Overload extends ModuleMember {
 
 		this.flags = flags;
 		this.parameters = [];
-		this.entryPoint = null;
+		this.body = null;
 
-		this.optionalParamCount = 0;
 		this.localCount = 0;
 		this.maxStack = 8;
 		this.tryBlocks = [];
@@ -271,5 +272,16 @@ export class FinallyBlock {
 
 	get blockKind() {
 		return BlockKind.FINALLY;
+	}
+}
+
+export class FaultBlock {
+	constructor(faultStart, faultEnd) {
+		this.faultStart = faultStart;
+		this.faultEnd = faultEnd;
+	}
+
+	get blockKind() {
+		return BlockKind.FAULT;
 	}
 }

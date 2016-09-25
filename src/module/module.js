@@ -1,6 +1,7 @@
 import {ModuleMember, MetadataMember, MemberKind, MetaKind} from './modulemember';
 import {Namespace} from './namespace';
 
+// Token types - duplicated in modulereader.js for performance reasons.
 const T_CONSTANT_DEF = 0x02000000;
 const T_FUNCTION_DEF = 0x04000000;
 const T_TYPE_DEF     = 0x10000000;

@@ -12,11 +12,11 @@ export const OperatorKind = Object.freeze({
 	POWER:       0x08,
 	SHIFT_LEFT:  0x09,
 	SHIFT_RIGHT: 0x0A,
-	PLUS:        0x0D,
-	NEGATE:      0x0E,
-	NOT:         0x0F,
-	EQUALS:      0x10,
-	COMPARE:     0x11,
+	PLUS:        0x0B,
+	NEGATE:      0x0C,
+	NOT:         0x0D,
+	EQUALS:      0x0E,
+	COMPARE:     0x0F,
 });
 
 const OperatorNames = Object.freeze({
