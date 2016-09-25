@@ -229,6 +229,9 @@ export class MethodBodyRenderer {
 			case BlockKind.FINALLY:
 				content = 'finally {';
 				break;
+			case BlockKind.FAULT:
+				content = 'fault {';
+				break;
 			default:
 				throw new Error(`Invalid block kind: ${block.blockKind}`);
 		}
