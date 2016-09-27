@@ -354,7 +354,7 @@ export const ALL_OPCODES = Object.freeze({
 
 	0x2d: new Opcode('newobj.s', 0, args('tk/type', 'ub/argc'), args => new StackChange(args[1].value, 1),
 		'Creates a new object of the specified type with the specified number of constructor arguments, and pushes the result. (short form)'),
-	0x2e: new Opcode('newobj',   0, args('tk/type', 'ub/argc'), args => new StackChange(args[1].value, 1),
+	0x2e: new Opcode('newobj',   0, args('tk/type', 'u2/argc'), args => new StackChange(args[1].value, 1),
 		'Creates a new object of the specified type with the specified number of constructor arguments, and pushes the result.'),
 
 	0x2f: new Opcode('call.0', 0, NO_ARGS, stack(-1, +1), 'Invokes a value on the stack with 0 arguments, and pushes the return value.'),
