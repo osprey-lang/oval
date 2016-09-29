@@ -284,6 +284,7 @@ class ModuleReader {
 
 				const fieldRef = new FieldRef(declType, name);
 				fieldRefs._add(token, fieldRef);
+				declType._add(fieldRef);
 
 				address += FIELD_REF_SIZE;
 			}
@@ -310,6 +311,7 @@ class ModuleReader {
 
 				const methodRef = new MethodRef(declType, name);
 				methodRefs._add(token, methodRefs);
+				declType._add(methodRef);
 
 				address += METHOD_REF_SIZE;
 			}
