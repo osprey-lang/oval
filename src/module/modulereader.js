@@ -310,7 +310,7 @@ class ModuleReader {
 				const name = module.strings.get(nameToken, true);
 
 				const methodRef = new MethodRef(declType, name);
-				methodRefs._add(token, methodRefs);
+				methodRefs._add(token, methodRef);
 				declType._add(methodRef);
 
 				address += METHOD_REF_SIZE;
