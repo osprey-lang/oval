@@ -158,7 +158,7 @@ class ModuleReader {
 		const module = new Module(name, version);
 
 		this.deref(32, address => this.readStringTable(address, module));
-		module._nativeLibrary = this.deref(36, address => this.readStringOrNull(address));
+		module._nativeLibrary = this.derefOrNull(36, address => this.readString(address));
 
 		this.deref(40, address => this.readReferences(address, module));
 
