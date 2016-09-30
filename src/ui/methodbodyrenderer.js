@@ -49,11 +49,16 @@ const STACK_ITEM_REF_CLASS = 'stack-item--ref';
 function formatMethodOffset(offset) {
 	var str = offset.toString(16).toUpperCase();
 
-	while (str.length < 4) {
-		str = '0' + str;
+	switch (str.length) {
+		case 1:
+			return `:000${str}`;
+		case 2:
+			return `:00${str}`;
+		case 3:
+			return `:0${str}`;
+		default:
+			return `:${str}`;
 	}
-
-	return `:${str}`;
 }
 
 export class MethodBodyRenderer {
