@@ -318,11 +318,12 @@ export class MethodBodyRenderer {
 
 	renderArgumentCountArgument(argument) {
 		// Hardcoded English plural rules :)
-		const formattedValue = argument.value === 1
-			? '1 arg'
-			: `${argument.value} args`;
+		const argPlural = argument.value === 1 ? ' arg' : ' args';
 
-		return Create.span(ARGC_ARG_ATTR, formattedValue);
+		return Create.span(ARGC_ARG_ATTR, [
+			`${argument.value}`,
+			Create.elem('small', null, argPlural)
+		]);
 	}
 
 	renderJumpTargetArgument(data, instruction, argument) {

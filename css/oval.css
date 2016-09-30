@@ -771,6 +771,10 @@ input[type=file] {
 		padding-right: 2px;
 	}
 
+		.instr__arg small {
+			font-size: 0.8em;
+		}
+
 	.instr__block {
 		margin-left: 5px;
 	}
