@@ -159,6 +159,12 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 		this.renderLicense(module, moduleInfo);
 
 		parent.appendChild(moduleInfo);
+
+		if (module.mainMethod) {
+			parent.appendChild(
+				this.renderImplementingMethod('Main method: ', module.mainMethod)
+			);
+		}
 	}
 
 	renderAuthor(module, parent) {
