@@ -354,7 +354,7 @@ export const ALL_OPCODES = Object.freeze({
 
 	0x2d: new Opcode('newobj.s', 0, args('tk/type', 'ub/argc'), args => new StackChange(args[1].value, 1),
 		'Creates a new object of the specified type with the specified number of constructor arguments, and pushes the result. (short form)'),
-	0x2e: new Opcode('newobj',   0, args('tk/type', 'ub/argc'), args => new StackChange(args[1].value, 1),
+	0x2e: new Opcode('newobj',   0, args('tk/type', 'u2/argc'), args => new StackChange(args[1].value, 1),
 		'Creates a new object of the specified type with the specified number of constructor arguments, and pushes the result.'),
 
 	0x2f: new Opcode('call.0', 0, NO_ARGS, stack(-1, +1), 'Invokes a value on the stack with 0 arguments, and pushes the return value.'),
@@ -431,18 +431,18 @@ export const ALL_OPCODES = Object.freeze({
 	0x55: new Opcode('pow',    0, NO_ARGS, stack(-2, +1), 'Invokes the ** operator on the first and second stack value.'),
 	0x56: new Opcode('shl',    0, NO_ARGS, stack(-2, +1), 'Invokes the << operator on the first and second stack value.'),
 	0x57: new Opcode('shr',    0, NO_ARGS, stack(-2, +1), 'Invokes the >> operator on the first and second stack value.'),
-	//0x58: Reserved (previously hashop/#)
-	//0x59: Reserved (previously dollar/$)
-	0x5a: new Opcode('plus',   0, NO_ARGS, stack(-1, +1), 'Invokes the unary + operator on the first and second stack value.'),
-	0x5b: new Opcode('neg',    0, NO_ARGS, stack(-1, +1), 'Invokes the unary - operator on the first and second stack value.'),
-	0x5c: new Opcode('not',    0, NO_ARGS, stack(-1, +1), 'Invokes the ~ operator on the first and second stack value.'),
-	0x5d: new Opcode('eq',     0, NO_ARGS, stack(-2, +1), 'Invokes the == operator on the first and second stack value.'),
-	0x5e: new Opcode('cmp',    0, NO_ARGS, stack(-2, +1), 'Invokes the <=> operator on the first and second stack value.'),
-	0x5f: new Opcode('lt',     0, NO_ARGS, stack(-2, +1), 'Invokes the < operator on the first and second stack value.'),
-	0x60: new Opcode('gt',     0, NO_ARGS, stack(-2, +1), 'Invokes the > operator on the first and second stack value.'),
-	0x61: new Opcode('lte',    0, NO_ARGS, stack(-2, +1), 'Invokes the <= operator on the first and second stack value.'),
-	0x62: new Opcode('gte',    0, NO_ARGS, stack(-2, +1), 'Invokes the >= operator on the first and second stack value.'),
-	0x63: new Opcode('concat', 0, NO_ARGS, stack(-2, +1), 'Invokes the concatenation operator (::) on the first and second stack value.'),
+	0x58: new Opcode('plus',   0, NO_ARGS, stack(-1, +1), 'Invokes the unary + operator on the first and second stack value.'),
+	0x59: new Opcode('neg',    0, NO_ARGS, stack(-1, +1), 'Invokes the unary - operator on the first and second stack value.'),
+	0x5a: new Opcode('not',    0, NO_ARGS, stack(-1, +1), 'Invokes the ~ operator on the first and second stack value.'),
+	0x5b: new Opcode('eq',     0, NO_ARGS, stack(-2, +1), 'Invokes the == operator on the first and second stack value.'),
+	0x5c: new Opcode('cmp',    0, NO_ARGS, stack(-2, +1), 'Invokes the <=> operator on the first and second stack value.'),
+	0x5d: new Opcode('lt',     0, NO_ARGS, stack(-2, +1), 'Invokes the < operator on the first and second stack value.'),
+	0x5e: new Opcode('gt',     0, NO_ARGS, stack(-2, +1), 'Invokes the > operator on the first and second stack value.'),
+	0x5f: new Opcode('lte',    0, NO_ARGS, stack(-2, +1), 'Invokes the <= operator on the first and second stack value.'),
+	0x60: new Opcode('gte',    0, NO_ARGS, stack(-2, +1), 'Invokes the >= operator on the first and second stack value.'),
+	0x61: new Opcode('concat', 0, NO_ARGS, stack(-2, +1), 'Invokes the concatenation operator (::) on the first and second stack value.'),
+	//0x62: Reserved (previously hashop/#)
+	//0x63: Reserved (previously dollar/$)
 
 	0x64: new Opcode('list.0', 0, NO_ARGS,    stack(+1), 'Creates a new List with capacity 0, and pushes it.'),
 	0x65: new Opcode('list.s', 0, args('ub'), stack(+1), 'Creates a new List with the specified capacity, and pushes it. (short form)'),

@@ -49,11 +49,16 @@ const STACK_ITEM_REF_CLASS = 'stack-item--ref';
 function formatMethodOffset(offset) {
 	var str = offset.toString(16).toUpperCase();
 
-	while (str.length < 4) {
-		str = '0' + str;
+	switch (str.length) {
+		case 1:
+			return `:000${str}`;
+		case 2:
+			return `:00${str}`;
+		case 3:
+			return `:0${str}`;
+		default:
+			return `:${str}`;
 	}
-
-	return `:${str}`;
 }
 
 export class MethodBodyRenderer {
@@ -229,6 +234,9 @@ export class MethodBodyRenderer {
 			case BlockKind.FINALLY:
 				content = 'finally {';
 				break;
+			case BlockKind.FAULT:
+				content = 'fault {';
+				break;
 			default:
 				throw new Error(`Invalid block kind: ${block.blockKind}`);
 		}
@@ -299,7 +307,7 @@ export class MethodBodyRenderer {
 
 	renderNumericArgument(argument) {
 		const formattedValue = argument.isRawBytes
-			? formatInt(argument.value)
+			? formatInt(argument.value, argument.signed)
 			: formatReal(argument.value);
 
 		return Create.span(NUMERIC_ARG_ATTR, formattedValue);
@@ -315,11 +323,12 @@ export class MethodBodyRenderer {
 
 	renderArgumentCountArgument(argument) {
 		// Hardcoded English plural rules :)
-		const formattedValue = argument.value === 1
-			? '1 arg'
-			: `${argument.value} args`;
+		const argPlural = argument.value === 1 ? ' arg' : ' args';
 
-		return Create.span(ARGC_ARG_ATTR, formattedValue);
+		return Create.span(ARGC_ARG_ATTR, [
+			`${argument.value}`,
+			Create.elem('small', null, argPlural)
+		]);
 	}
 
 	renderJumpTargetArgument(data, instruction, argument) {

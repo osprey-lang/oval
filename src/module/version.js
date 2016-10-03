@@ -1,9 +1,8 @@
 export class Version {
-	constructor(major, minor, build, revision) {
+	constructor(major, minor, patch) {
 		this.major = major;
 		this.minor = minor;
-		this.build = build;
-		this.revision = revision;
+		this.patch = patch;
 	}
 
 	equals(other) {
@@ -15,14 +14,13 @@ export class Version {
 	}
 
 	toString() {
-		return `${this.major}.${this.minor}.${this.build}.${this.revision}`;
+		return `${this.major}.${this.minor}.${this.patch}`;
 	}
 
 	static equals(a, b) {
 		return a.major === b.major &&
 			a.minor === b.minor &&
-			a.build === b.build &&
-			a.revision === b.revision;
+			a.patch === b.patch;
 	}
 
 	static compare(a, b) {
@@ -34,12 +32,8 @@ export class Version {
 			return a.minor < b.minor ? -1 : 1;
 		}
 
-		if (a.build !== b.build) {
-			return a.build < b.build ? -1 : 1;
-		}
-
-		if (a.revision !== b.revision) {
-			return a.revision < b.revision ? -1 : 1;
+		if (a.patch !== b.patch) {
+			return a.patch < b.patch ? -1 : 1;
 		}
 
 		return 0;

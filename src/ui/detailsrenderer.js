@@ -2,6 +2,7 @@ import {ModuleMemberVisitor, MetaKind, MemberKind} from '../module/modulemember'
 import {Create} from '../html/create';
 import {Icon} from './icon';
 import {formatParamList, ParamListFormatter} from './formatparamlist';
+import {formatRequiredVersion} from './formatrequiredversion';
 import {SummaryRenderer, SummaryRenderOptions} from './summaryrenderer';
 import {MemberListRenderer, MemberListRenderOptions} from './memberlistrenderer';
 import {ConstantValueRenderer, formatInt, formatReal, formatToken} from './constantvaluerenderer';
@@ -76,7 +77,8 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 		return Create.p(null,
 			'Imported from: ',
 			this.renderLink(module, [
-				`${module.name} \u2013 `, Create.i(null, 'v' + module.version)
+				`${module.name} \u2013 `,
+				Create.i(null, formatRequiredVersion(module.version, module.versionConstraint))
 			])
 		);
 	}
@@ -157,6 +159,12 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 		this.renderLicense(module, moduleInfo);
 
 		parent.appendChild(moduleInfo);
+
+		if (module.mainMethod) {
+			parent.appendChild(
+				this.renderImplementingMethod('Main method: ', module.mainMethod)
+			);
+		}
 	}
 
 	renderAuthor(module, parent) {
@@ -369,7 +377,7 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 		}
 
 		return Create.fragment(
-			Create.p(null, 'Required version: ' + module.version),
+			Create.p(null, 'Required version: ' + formatRequiredVersion(module.version, module.versionConstraint)),
 			importedMembers
 		);
 	}

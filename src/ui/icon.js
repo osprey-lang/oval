@@ -82,8 +82,8 @@ export const Icon = Object.freeze({
 	type(type) {
 		const icon = makeIcon(type.isAbstract ? 'type-abstract' : 'type');
 
-		if (type.isPrivate) {
-			addBadge(icon, 'private');
+		if (type.isInternal) {
+			addBadge(icon, 'internal');
 		}
 
 		return icon;
@@ -92,11 +92,14 @@ export const Icon = Object.freeze({
 	field(field) {
 		const icon = makeIcon('field');
 
-		if (field.isPrivate) {
-			addBadge(icon, 'private');
+		if (field.isInternal) {
+			addBadge(icon, 'internal');
 		}
 		else if (field.isProtected) {
 			addBadge(icon, 'protected');
+		}
+		else if (field.isPrivate) {
+			addBadge(icon, 'private');
 		}
 
 		return icon;
@@ -105,11 +108,14 @@ export const Icon = Object.freeze({
 	overload(overload) {
 		const icon = makeIcon(overload.isAbstract ? 'method-abstract' : 'method');
 
-		if (overload.isPrivate) {
-			addBadge(icon, 'private');
+		if (overload.isInternal) {
+			addBadge(icon, 'internal');
 		}
 		else if (overload.isProtected) {
 			addBadge(icon, 'protected');
+		}
+		else if (overload.isPrivate) {
+			addBadge(icon, 'private');
 		}
 
 		return icon;
@@ -118,11 +124,14 @@ export const Icon = Object.freeze({
 	property(property) {
 		const icon = makeIcon(property.isAbstract ? 'property-abstract' : 'property');
 
-		if (property.isPrivate) {
-			addBadge(icon, 'private');
+		if (property.isInternal) {
+			addBadge(icon, 'internal');
 		}
 		else if (property.isProtected) {
 			addBadge(icon, 'protected');
+		}
+		else if (property.isPrivate) {
+			addBadge(icon, 'private');
 		}
 
 		return icon;
@@ -135,8 +144,8 @@ export const Icon = Object.freeze({
 	constant(constant) {
 		const icon = makeIcon('field');
 
-		if (constant.isPrivate) {
-			addBadge(icon, 'private');
+		if (constant.isInternal) {
+			addBadge(icon, 'internal');
 		}
 
 		return icon;

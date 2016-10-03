@@ -7,11 +7,18 @@ export class MemberRef extends ModuleMember {
 	}
 }
 
+export const VersionConstraint = Object.freeze({
+	EXACT:       0,
+	FIXED_MINOR: 1,
+	FIXED_MAJOR: 2,
+});
+
 export class ModuleRef extends MemberRef {
-	constructor(parent, name, version) {
+	constructor(parent, name, versionConstraint, version) {
 		super(MemberKind.MODULE_REF, parent);
 
 		this._name = name;
+		this._versionConstraint = versionConstraint;
 		this._version = version;
 		this.members = new Namespace(this, null);
 	}
@@ -22,6 +29,10 @@ export class ModuleRef extends MemberRef {
 
 	get fullName() {
 		return this.name;
+	}
+
+	get versionConstraint() {
+		return this._versionConstraint;
 	}
 
 	get version() {

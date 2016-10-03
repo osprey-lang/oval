@@ -26,6 +26,10 @@ export class Property extends ModuleMember {
 		return this._flagsSource.isPublic;
 	}
 
+	get isInternal() {
+		return this._flagsSource.isInternal;
+	}
+
 	get isProtected() {
 		return this._flagsSource.isProtected;
 	}

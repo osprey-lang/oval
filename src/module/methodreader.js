@@ -431,9 +431,8 @@ class Stack {
 class MethodReader {
 	constructor(method) {
 		this.method = method;
+		this.data = method.body;
 		this.position = 0;
-
-		this.initMethodBody();
 	}
 
 	get module() {
@@ -442,17 +441,6 @@ class MethodReader {
 
 	get eof() {
 		return this.position >= this.data.byteLength;
-	}
-
-	initMethodBody() {
-		const method = this.method;
-		const methodBodyBlock = method.module.methodBodyData;
-
-		this.data = new DataView(
-			methodBodyBlock.buffer,
-			method.entryPoint.offset,
-			method.entryPoint.length
-		);
 	}
 
 	readInt8() {

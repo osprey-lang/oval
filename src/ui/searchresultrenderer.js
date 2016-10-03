@@ -3,6 +3,7 @@ import {Create} from '../html/create';
 import {Icon} from './icon';
 import {makeExpandable} from './expander';
 import {formatParamList, ParamListFormatter} from './formatparamlist';
+import {formatRequiredVersion} from './formatrequiredversion';
 
 const MEMBER_ATTR = {class: 'member'};
 const NAME_ATTR = {class: 'member-name member-link'};
@@ -58,7 +59,9 @@ export class SearchResultRenderer extends ModuleMemberVisitor {
 	visitModuleRef(module) {
 		return Create.li(MEMBER_ATTR,
 			this.renderName(module, Icon.module, [
-				module.name, ' – ', Create.i(null, 'v', module.version)
+				module.name,
+				' \u2013 ',
+				Create.i(null, formatRequiredVersion(module.version, module.versionConstraint))
 			])
 		);
 	}

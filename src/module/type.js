@@ -1,12 +1,13 @@
 import {ModuleMember, MemberKind} from './modulemember';
 
 export const TypeFlags = Object.freeze({
-	PUBLIC:    0x01,
-	PRIVATE:   0x02,
-	ABSTRACT:  0x04,
-	SEALED:    0x08,
-	STATIC:    0x0c,
-	PRIMITIVE: 0x18,
+	PUBLIC:    0x0001,
+	INTERNAL:  0x0002,
+	ABSTRACT:  0x0100,
+	SEALED:    0x0200,
+	STATIC:    0x0300,
+	IMPL:      0x1000,
+	PRIMITIVE: 0x2000,
 });
 
 export class Type extends ModuleMember {
@@ -42,8 +43,8 @@ export class Type extends ModuleMember {
 		return (this.flags & TypeFlags.PUBLIC) === TypeFlags.PUBLIC;
 	}
 
-	get isPrivate() {
-		return (this.flags & TypeFlags.PRIVATE) === TypeFlags.PRIVATE;
+	get isInternal() {
+		return (this.flags & TypeFlags.INTERNAL) === TypeFlags.INTERNAL;
 	}
 
 	get isAbstract() {
@@ -59,6 +60,10 @@ export class Type extends ModuleMember {
 
 	get isStatic() {
 		return (this.flags & TypeFlags.STATIC) === TypeFlags.STATIC;
+	}
+
+	get isImpl() {
+		return (this.flags & TypeFlags.IMPL) === TypeFlags.IMPL;
 	}
 
 	get isPrimitive() {

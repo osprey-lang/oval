@@ -1,35 +1,40 @@
 import {ModuleMember, MemberKind} from './modulemember';
 
 export const MethodFlags = Object.freeze({
-	PUBLIC:    0x01,
-	PRIVATE:   0x02,
-	PROTECTED: 0x04,
-	INSTANCE:  0x08,
-	CTOR:      0x10,
-	IMPL:      0x20,
+	PUBLIC:    0x0001,
+	INTERNAL:  0x0002,
+	PROTECTED: 0x0004,
+	PRIVATE:   0x0008,
+	INSTANCE:  0x0100,
+	CTOR:      0x0200,
+	IMPL:      0x1000,
 });
 
 export const OverloadFlags = Object.freeze({
-	VARIADIC:     0x01,
-	NATIVE:       0x04,
-	SHORT_HEADER: 0x08,
-	VIRTUAL:      0x10,
-	ABSTRACT:     0x20,
+	VARIADIC:     0x0001,
+	VIRTUAL:      0x0100,
+	ABSTRACT:     0x0200,
+	OVERRIDE:     0x0400,
+	NATIVE:       0x1000,
+	SHORT_HEADER: 0x2000,
 });
 
 export const ParamFlags = Object.freeze({
-	BY_REF: 0x01,
+	BY_REF:   0x01,
+	OPTIONAL: 0x02,
 });
 
 export const TryKind = Object.freeze({
 	CATCH:   0x01,
 	FINALLY: 0x02,
+	FAULT:   0x03,
 });
 
 export const BlockKind = Object.freeze({
 	TRY: 0,
 	CATCH: 1,
 	FINALLY: 2,
+	FAULT: 3,
 });
 
 export class Method extends ModuleMember {
@@ -71,12 +76,16 @@ export class Method extends ModuleMember {
 		return (this.flags & MethodFlags.PUBLIC) === MethodFlags.PUBLIC;
 	}
 
-	get isPrivate() {
-		return (this.flags & MethodFlags.PRIVATE) === MethodFlags.PRIVATE;
+	get isInternal() {
+		return (this.flags & MethodFlags.INTERNAL) === MethodFlags.INTERNAL;
 	}
 
 	get isProtected() {
 		return (this.flags & MethodFlags.PROTECTED) === MethodFlags.PROTECTED;
+	}
+
+	get isPrivate() {
+		return (this.flags & MethodFlags.PRIVATE) === MethodFlags.PRIVATE;
 	}
 
 	get isStatic() {
@@ -124,9 +133,8 @@ export class Overload extends ModuleMember {
 
 		this.flags = flags;
 		this.parameters = [];
-		this.entryPoint = null;
+		this.body = null;
 
-		this.optionalParamCount = 0;
 		this.localCount = 0;
 		this.maxStack = 8;
 		this.tryBlocks = [];
@@ -173,16 +181,24 @@ export class Overload extends ModuleMember {
 		return (this.flags & OverloadFlags.ABSTRACT) === OverloadFlags.ABSTRACT;
 	}
 
+	get isOverride() {
+		return (this.flags & OverloadFlags.OVERRIDE) === OverloadFlags.OVERRIDE;
+	}
+
 	get isPublic() {
 		return this._parent.isPublic;
 	}
 
-	get isPrivate() {
-		return this._parent.isPrivate;
+	get isInternal() {
+		return this._parent.isInternal;
 	}
 
 	get isProtected() {
 		return this._parent.isProtected;
+	}
+
+	get isPrivate() {
+		return this._parent.isPrivate;
 	}
 
 	get isStatic() {
@@ -220,9 +236,7 @@ export class Parameter {
 	}
 
 	get isOptional() {
-		const overload = this.overload;
-		return this.overload.optionalParamCount > 0 &&
-			this.index >= this.overload.parameters.length - this.overload.optionalParamCount;
+		return (this.flags & ParamFlags.OPTIONAL) === ParamFlags.OPTIONAL;
 	}
 }
 
@@ -258,5 +272,16 @@ export class FinallyBlock {
 
 	get blockKind() {
 		return BlockKind.FINALLY;
+	}
+}
+
+export class FaultBlock {
+	constructor(faultStart, faultEnd) {
+		this.faultStart = faultStart;
+		this.faultEnd = faultEnd;
+	}
+
+	get blockKind() {
+		return BlockKind.FAULT;
 	}
 }
