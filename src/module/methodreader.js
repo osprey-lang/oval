@@ -33,7 +33,7 @@ function readInstructions(method) {
 		const instruction = new Instruction(
 			instructions.length, // index
 			offset,
-			reader.position - offset, // length
+			reader.position - offset, // size
 			opcode,
 			args,
 			stackChange,
@@ -115,7 +115,7 @@ function addBlockEnd(block, blockEnd, instructions, instructionsByAddress) {
 		// If we didn't find an instruction, the block may end at the very last
 		// instruction, so try that instruction and verify its end offset.
 		instruction = instructions[instructions.length - 1];
-		if (instruction.offset + instruction.length !== blockEnd) {
+		if (instruction.offset + instruction.size !== blockEnd) {
 			throw new Error(`Invalid block end offset: ${blockEnd.toString(16)}`);
 		}
 	}
