@@ -126,20 +126,26 @@ export class MethodBodyRenderer {
 			result = elem;
 		}
 
-		// If the instruction starts or ends with an empty stack, mark it up specially.
-		// These instructions usually start/end a statement, which is indicated with
-		// extra spacing.
-		if (instruction.stackBefore.height === 0) {
-			elem.classList.add('instr--empty-stack-before');
-		}
-		if (instruction.stackAfter.height === 0) {
-			elem.classList.add('instr--empty-stack-after');
+		if (instruction.reachable) {
+			// If the instruction starts or ends with an empty stack, mark it up specially.
+			// These instructions usually start/end a statement, which is indicated with
+			// extra spacing.
+			if (instruction.stackBefore.height === 0) {
+				elem.classList.add('instr--empty-stack-before');
+			}
+			if (instruction.stackAfter.height === 0) {
+				elem.classList.add('instr--empty-stack-after');
+			}
 		}
 
 		return result;
 	}
 
 	renderStackItems(data, instruction, parent) {
+		if (!instruction.reachable) {
+			return;
+		}
+
 		const stackChange = instruction.stackChange;
 		const stackBefore = instruction.stackBefore;
 		const stackAfter = instruction.stackAfter;
