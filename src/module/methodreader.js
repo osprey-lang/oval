@@ -88,6 +88,16 @@ function applyTryBlocks(method, instructions, instructionsByAddress) {
 					instructionsByAddress
 				);
 				break;
+			case TryKind.FAULT:
+				const faultBlock = tryBlock.faultBlock;
+				addBlock(
+					faultBlock,
+					faultBlock.faultStart,
+					faultBlock.faultEnd,
+					instructions,
+					instructionsByAddress
+				);
+				break;
 		}
 	});
 }
@@ -222,11 +232,12 @@ function getInitialBranches(method, instructions) {
 	];
 
 	if (method.tryBlocks.length > 0) {
-		// For try blocks, the start of each catch and finally is also recorded
-		// as the start of a new branch. The only way to reach a catch is by
+		// For try blocks, the start of each catch, finally and fault is also
+		// recorded as the start of a new branch. The only way to reach a catch
 		// catching an error; the only way to reach a finally is by leaving a
-		// try block. Hence we will never visit these instructions during the
-		// processing of "regular" branches.
+		// try block; and the only way to reach a fault is by throwing an error.
+		// Hence we will never visit these instructions during the processing of
+		// "regular" control flow.
 		method.tryBlocks.forEach(tryBlock => {
 			switch (tryBlock.tryKind) {
 				case TryKind.CATCH:
@@ -241,6 +252,10 @@ function getInitialBranches(method, instructions) {
 				case TryKind.FINALLY:
 					const finallyBlock = tryBlock.finallyBlock;
 					branches.push(new Branch(finallyBlock.finallyStart, new Stack(0)));
+					break;
+				case TryKind.FAULT:
+					const faultBlock = tryBlock.faultBlock;
+					branches.push(new Branch(faultBlock.faultStart), new Stack(0));
 					break;
 			}
 		});
