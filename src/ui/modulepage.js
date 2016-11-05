@@ -127,9 +127,7 @@ export class ModulePage {
 			},
 		});
 
-		const searcher = new MemberFilter({
-			getElement: member => this._memberToElement.get(member),
-		});
+		const searcher = new MemberFilter();
 
 		var currentResults = null;
 		var currentOffset = 0;

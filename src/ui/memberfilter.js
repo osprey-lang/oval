@@ -154,10 +154,8 @@ export class SearchQuery {
 }
 
 export class MemberFilter extends ModuleMemberVisitor {
-	constructor(target) {
+	constructor() {
 		super();
-
-		this.getElement = target.getElement;
 	}
 
 	filter(member, query) {
