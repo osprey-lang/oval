@@ -143,6 +143,74 @@ export class SearchQuery {
 		return index === this.maxIndex ? totalScore : 0;
 	}
 
+	getSimpleNameMatch(name) {
+		if (!this.simpleMatch) {
+			return null;
+		}
+
+		const match = this.simpleMatch.exec(name);
+		return {
+			index: match.index,
+			length: match[0].length,
+		};
+	}
+
+	getFullNameMatches(member) {
+		if (this.maxIndex === 0) {
+			return null;
+		}
+
+		const declaringModule = member.declaringModule;
+		const matches = [];
+
+		var index = 0;
+		var component = this.components[0];
+
+		while (
+			index < this.maxIndex && member &&
+			// Stop at the module boundary (we don't want to match against the module's name)
+			member !== declaringModule
+		) {
+			const parent = member.parent;
+
+			var match = component.exec(member.name);
+			if (match) {
+				// In the original member's name, the current member's name begins after
+				// the dot following the parent's full name. To get this member name's
+				// index in the full name, we add this offset.
+				const memberNameStartIndex =
+					// Note: global namespace has no name
+					parent && parent !== declaringModule && parent.fullName !== null
+						// fullName + dot
+						? parent.fullName.length + 1
+						// No preceding parent, so distance 0
+						: 0;
+
+				// Components are ordered back-to-front, but we want the matches to go
+				// from low to high character index. It's probably better to unshift
+				// here than to sort later.
+				matches.unshift({
+					index: match.index + memberNameStartIndex,
+					length: match[0].length,
+				});
+
+				// Keep walking "up" the dotted chain.
+				index++;
+				component = this.components[index];
+			}
+			else if (index === 0) {
+				// First component has to match.
+				break;
+			}
+
+			// Always walk up the member chain.
+			member = parent;
+		}
+
+		// If index === maxIndex, it means the whole chain matches, so the member matches.
+		return index === this.maxIndex ? matches : null;
+	}
+
 	static from(query) {
 		if (query instanceof SearchQuery) {
 			return query;

@@ -1,7 +1,7 @@
 import {SidebarRenderer} from './sidebarrenderer';
 import {SearchResultRenderer} from './searchresultrenderer';
 import {DetailsRenderer} from './detailsrenderer';
-import {MemberFilter} from './memberfilter';
+import {SearchQuery, MemberFilter} from './memberfilter';
 import {FileDropZone} from '../filedropzone';
 import {Create} from '../html/create';
 import EventEmitter from '../lib/eventemitter2';
@@ -129,15 +129,17 @@ export class ModulePage {
 
 		const searcher = new MemberFilter();
 
+		var lastQueryString = "";
 		var currentResults = null;
 		var currentOffset = 0;
+		var currentQuery = null; // SearchQuery
 
 		const appendMoreResults = () => {
 			const fragment = Create.fragment();
 
 			const end = Math.min(currentOffset + RESULTS_PER_PAGE, currentResults.length);
 			for (var i = currentOffset; i < end; i++) {
-				fragment.appendChild(renderer.render(currentResults[i]));
+				fragment.appendChild(renderer.render(currentResults[i], currentQuery));
 			}
 
 			searchResultList.insertBefore(fragment, showMoreItem);
@@ -165,14 +167,20 @@ export class ModulePage {
 		filterInput.addEventListener('input', e => {
 			const query = filterInput.value.trim();
 
-			if (query.length > 0) {
-				sidebar.classList.add(FILTERED_LIST_CLASS);
-				const results = searcher.filter(this.currentModule, query);
-				setResults(results);
-			}
-			else {
-				sidebar.classList.remove(FILTERED_LIST_CLASS);
-				setResults(null);
+			if (query !== lastQueryString) {
+				lastQueryString = query;
+
+				if (query.length > 0) {
+					currentQuery = SearchQuery.from(query);
+					sidebar.classList.add(FILTERED_LIST_CLASS);
+					const results = searcher.filter(this.currentModule, currentQuery);
+					setResults(results);
+				}
+				else {
+					currentQuery = null;
+					sidebar.classList.remove(FILTERED_LIST_CLASS);
+					setResults(null);
+				}
 			}
 		}, false);
 
