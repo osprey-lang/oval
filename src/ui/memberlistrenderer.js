@@ -12,12 +12,11 @@ const MEMBER_ATTR = {class: 'member'};
 const NAME_ATTR = {class: 'member-name'};
 
 export class MemberListRenderer extends ModuleMemberVisitor {
-	constructor(detailsRenderer) {
+	constructor(summaryRenderer, constantRenderer) {
 		super();
 
-		this.detailsRenderer = detailsRenderer;
-		this.summaryRenderer = detailsRenderer.summaryRenderer;
-		this.constantRenderer = detailsRenderer.constantRenderer;
+		this.summaryRenderer = summaryRenderer;
+		this.constantRenderer = constantRenderer;
 
 		this.options = 0;
 		this.optionsStack = [];

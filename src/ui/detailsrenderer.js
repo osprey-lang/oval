@@ -29,7 +29,10 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 
 		this.summaryRenderer = new SummaryRenderer(target);
 		this.constantRenderer = new ConstantValueRenderer(target);
-		this.memberListRenderer = new MemberListRenderer(this);
+		this.memberListRenderer = new MemberListRenderer(
+			this.summaryRenderer,
+			this.constantRenderer
+		);
 		this.methodBodyRenderer = new MethodBodyRenderer(target);
 	}
 
