@@ -126,7 +126,7 @@ export class ConstantValueRenderer {
 	}
 
 	clickMember(member) {
-		this.target.raise('member.click', member);
+		this.target.raise('member.select', member);
 	}
 
 	renderTypeLink(type, displayName) {

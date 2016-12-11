@@ -78,7 +78,7 @@ export class SearchResultRenderer extends ModuleMemberVisitor {
 	}
 
 	clickMember(member) {
-		this.target.raise('member.click', member);
+		this.target.raise('member.select', member);
 	}
 
 	renderAll(members, query) {

@@ -88,7 +88,7 @@ export class ModulePage {
 			},
 		});
 
-		this.on('member.click', member => {
+		this.on('member.select', member => {
 			this.currentMember = member;
 		});
 

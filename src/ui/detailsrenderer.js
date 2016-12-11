@@ -37,7 +37,7 @@ export class DetailsRenderer extends ModuleMemberVisitor {
 	}
 
 	clickMember(member) {
-		this.target.raise('member.click', member);
+		this.target.raise('member.select', member);
 	}
 
 	render(member) {
