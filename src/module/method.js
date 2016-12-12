@@ -104,12 +104,20 @@ export class Method extends ModuleMember {
 		return this._overloads.length;
 	}
 
+	getOverload(index) {
+		return this._overloads[index | 0] || null;
+	}
+
 	forEach(fn) {
 		this._overloads.forEach(overload => fn(overload));
 	}
 
 	map(fn) {
 		return this._overloads.map(fn);
+	}
+
+	indexOf(overload) {
+		return this._overloads.indexOf(overload);
 	}
 
 	_add(overload) {

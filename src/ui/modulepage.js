@@ -2,6 +2,7 @@ import {SidebarRenderer} from './sidebarrenderer';
 import {SearchResultRenderer} from './searchresultrenderer';
 import {DetailsRenderer} from './detailsrenderer';
 import {SearchQuery, MemberFilter} from './memberfilter';
+import {NavigationStateManager} from './navigationstatemanager';
 import {FileDropZone} from '../filedropzone';
 import {Create} from '../html/create';
 import EventEmitter from '../lib/eventemitter2';
@@ -27,6 +28,7 @@ export class ModulePage {
 		this.initMemberList();
 		this.initMemberFilter();
 		this.initDetailView();
+		this.initNavigationStateManager();
 	}
 
 	get currentModule() {
@@ -216,6 +218,10 @@ export class ModulePage {
 				details.innerHTML = '';
 			}
 		});
+	}
+
+	initNavigationStateManager() {
+		const stateManager = new NavigationStateManager(this);
 	}
 
 	emitFile(file) {

@@ -74,6 +74,10 @@ export class Type extends ModuleMember {
 		return this._members.size;
 	}
 
+	getMember(name) {
+		return this._members.get(name);
+	}
+
 	getMembers() {
 		var children = new Array(this._members.size);
 		this._members.forEach(value => {
