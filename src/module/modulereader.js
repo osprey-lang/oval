@@ -3,7 +3,17 @@ import {Version} from './version';
 import {Module} from './module';
 import {Type} from './type';
 import {Field, FieldFlags} from './field';
-import {Method, Overload, OverloadFlags, Parameter, TryBlock, CatchBlock, FinallyBlock, FaultBlock, TryKind} from './method';
+import {
+	Method,
+	Overload,
+	OverloadFlags,
+	Parameter,
+	TryBlock,
+	CatchBlock,
+	FinallyBlock,
+	FaultBlock,
+	TryKind
+} from './method';
 import {Property} from './property';
 import {Operator} from './operator';
 import {Constant} from './constant';
@@ -230,6 +240,7 @@ class ModuleReader {
 				const version = this.readVersion(address + 8);
 
 				const moduleRef = new ModuleRef(module, name, versionConstraint, version);
+				moduleRef.token = token;
 				moduleRefs._add(token, moduleRef);
 
 				address += MODULE_REF_SIZE;
@@ -256,6 +267,7 @@ class ModuleReader {
 				const fullName = module.strings.get(fullNameToken, true);
 
 				const typeRef = new TypeRef(declModule, fullName);
+				typeRef.token = token;
 				declModule._addGlobal(typeRef);
 				typeRefs._add(token, typeRef);
 
@@ -283,6 +295,7 @@ class ModuleReader {
 				const name = module.strings.get(nameToken, true);
 
 				const fieldRef = new FieldRef(declType, name);
+				fieldRef.token = token;
 				fieldRefs._add(token, fieldRef);
 				declType._add(fieldRef);
 
@@ -310,6 +323,7 @@ class ModuleReader {
 				const name = module.strings.get(nameToken, true);
 
 				const methodRef = new MethodRef(declType, name);
+				methodRef.token = token;
 				methodRefs._add(token, methodRef);
 				declType._add(methodRef);
 
@@ -337,6 +351,7 @@ class ModuleReader {
 				const fullName = module.strings.get(fullNameToken, true);
 
 				const functionRef = new FunctionRef(declModule, fullName);
+				functionRef.token = token;
 				declModule._addGlobal(functionRef);
 				functionRefs._add(token, functionRef);
 
@@ -375,6 +390,7 @@ class ModuleReader {
 				const token = this.makeToken(T_TYPE_DEF, i);
 
 				const type = this.readTypeDef(address, module, bases);
+				type.token = token;
 				types._add(token, type);
 				module._addGlobal(type);
 
@@ -441,6 +457,7 @@ class ModuleReader {
 			}
 
 			const field = new Field(type, flags, name, value);
+			field.token = token;
 			type._add(field);
 			fields._add(token, field);
 
@@ -464,6 +481,7 @@ class ModuleReader {
 			const token = firstToken + i;
 
 			const method = this.readMethodDef(address, module, type, false);
+			method.token = token;
 			type._add(method);
 			methods._add(token, method);
 
@@ -530,7 +548,7 @@ class ModuleReader {
 				const token = this.makeToken(T_FUNCTION_DEF, i);
 
 				const method = this.readMethodDef(address, module, null, true);
-
+				method.token = token;
 				module._addGlobal(method);
 				functions._add(token, method);
 
@@ -561,6 +579,7 @@ class ModuleReader {
 				const value = this.deref(address + 12, address => this.readConstantValue(address, module, false));
 
 				const constant = new Constant(module, flags, name, value);
+				constant.token = token;
 				module._addGlobal(constant);
 				constants._add(token, constant);
 
