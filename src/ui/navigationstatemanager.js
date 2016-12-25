@@ -53,6 +53,10 @@ const StateMemberKind = Object.freeze({
 });
 
 function getModuleIdentifier(module) {
+	if (!module) {
+		return -1;
+	}
+
 	if (!module.$historyStateId) {
 		const MAX_ID = 0xffffffff;
 		module.$historyStateId = Math.floor(MAX_ID * Math.random()) + 1;
