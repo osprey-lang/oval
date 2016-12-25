@@ -858,3 +858,13 @@ input[type=file] {
 		border-top-left-radius: 0;
 		border-top-right-radius: 6px;
 	}
+
+@media (max-width: 1300px), (max-height: 850px) {
+	.sidebar {
+		margin: 30px;
+	}
+
+	.member-details {
+		margin: 30px 30px 30px 0;
+	}
+}
