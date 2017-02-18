@@ -571,8 +571,8 @@ class ModuleReader {
 
 				const flags = this.readUint32(address);
 
-				const fullNameToken = this.readUint32(address + 4);
-				const fullName = module.strings.get(fullNameToken, true);
+				const nameToken = this.readUint32(address + 4);
+				const name = module.strings.get(nameToken, true);
 
 				this.readAnnotations(address + 8, module);
 
